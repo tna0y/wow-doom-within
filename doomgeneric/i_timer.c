@@ -21,12 +21,9 @@
 
 #include "doomgeneric.h"
 
-#include <stdarg.h>
-
-//#include <sys/time.h>
-//#include <unistd.h>
-
-
+#include "libc/libc.h"
+//#include "libc/libc.h"
+//#include "libc/libc.h"
 //
 // I_GetTime
 // returns time in 1/35th second tics

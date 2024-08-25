@@ -18,22 +18,15 @@
 //
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <errno.h>
-
+#include "libc/libc.h"
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <io.h>
+#include "libc/libc.h"
 #ifdef _MSC_VER
-#include <direct.h>
+#include "libc/libc.h"
 #endif
 #else
-#include <sys/stat.h>
-#include <sys/types.h>
+#include "libc/libc.h"
 #endif
 
 #include "doomtype.h"
@@ -48,40 +41,6 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-//
-// Create a directory
-//
-
-void M_MakeDirectory(char *path)
-{
-#ifdef _WIN32
-    mkdir(path);
-#else
-    mkdir(path, 0755);
-#endif
-}
-
-// Check if a file exists
-
-boolean M_FileExists(char *filename)
-{
-    FILE *fstream;
-
-    fstream = fopen(filename, "r");
-
-    if (fstream != NULL)
-    {
-        fclose(fstream);
-        return true;
-    }
-    else
-    {
-        // If we can't open because the file is a directory, the 
-        // "file" exists at least!
-
-        return errno == EISDIR;
-    }
-}
 
 //
 // Determine the length of an open file.

@@ -17,9 +17,7 @@
 //
 
 
-#include <stdio.h>
-#include <ctype.h>
-
+#include "libc/libc.h"
 #include "deh_main.h"
 #include "doomdef.h"
 

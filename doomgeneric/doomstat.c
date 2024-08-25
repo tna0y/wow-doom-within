@@ -16,8 +16,7 @@
 //	Put all global tate variables here.
 //
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "doomstat.h"
 
 

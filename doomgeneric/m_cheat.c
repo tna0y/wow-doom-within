@@ -18,8 +18,7 @@
 
 
 
-#include <string.h>
-
+#include "libc/libc.h"
 #include "doomtype.h"
 #include "m_cheat.h"
 

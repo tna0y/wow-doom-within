@@ -20,14 +20,6 @@
 #ifndef __SOUNDS__
 #define __SOUNDS__
 
-#include "i_sound.h"
-
-// the complete set of sound effects
-extern sfxinfo_t	S_sfx[];
-
-// the complete set of music
-extern musicinfo_t	S_music[];
-
 //
 // Identifiers for all music in game.
 //

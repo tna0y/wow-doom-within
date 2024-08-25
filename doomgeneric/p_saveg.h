@@ -20,8 +20,7 @@
 #ifndef __P_SAVEG__
 #define __P_SAVEG__
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 // maximum size of a savegame description
 
 #define SAVESTRINGSIZE 24

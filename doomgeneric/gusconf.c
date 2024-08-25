@@ -21,11 +21,7 @@
 //
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-
+#include "libc/libc.h"
 #include "w_wad.h"
 #include "z_zone.h"
 

@@ -36,6 +36,7 @@
 // State.
 #include "doomstat.h"
 
+#include "doomgeneric.h"
 
 // ?
 #define MAXWIDTH			1120
@@ -132,16 +133,19 @@ void R_DrawColumn (void)
     // Inner loop that does the actual texture mapping,
     //  e.g. a DDA-lile scaling.
     // This is as fast as it gets.
-    do 
-    {
-	// Re-map color indices from wall texture column
-	//  using a lighting/special effects LUT.
-	*dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+    // do 
+    // {
+	// // Re-map color indices from wall texture column
+	// //  using a lighting/special effects LUT.
+	// *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
 	
-	dest += SCREENWIDTH; 
-	frac += fracstep;
+	// dest += SCREENWIDTH; 
+	// frac += fracstep;
 	
-    } while (count--); 
+    // } while (count--); 
+
+    DG_DrawColumn(dest, dc_colormap, dc_source, frac, fracstep, count);
+    
 } 
 
 
@@ -622,20 +626,10 @@ void R_DrawSpan (void)
     // We do not check for zero spans here?
     count = ds_x2 - ds_x1;
 
-    do
-    {
-	// Calculate current texture index in u,v.
-        ytemp = (position >> 4) & 0x0fc0;
-        xtemp = (position >> 26);
-        spot = xtemp | ytemp;
+    
+    DG_DrawSpan(dest, ds_colormap, ds_source, position, step, count);
+    //     DG_DrawColumn(dest, dc_colormap, dc_source, frac, fracstep, count);
 
-	// Lookup pixel from flat texture tile,
-	//  re-index using light/colormap.
-	*dest++ = ds_colormap[ds_source[spot]];
-
-        position += step;
-
-    } while (count--);
 }
 
 

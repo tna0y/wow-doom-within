@@ -21,8 +21,7 @@
 //
 
 
-#include <stdlib.h>
-
+#include "libc/libc.h"
 #include "doomdef.h"
 #include "doomstat.h"
 
@@ -39,7 +38,7 @@
 
 #include "g_game.h"
 
-#include "s_sound.h"
+
 
 // State.
 #include "r_state.h"
@@ -1158,7 +1157,6 @@ void P_UpdateSpecials (void)
 			buttonlist[i].btexture;
 		    break;
 		}
-		S_StartSound(&buttonlist[i].soundorg,sfx_swtchn);
 		memset(&buttonlist[i],0,sizeof(button_t));
 	    }
 	}

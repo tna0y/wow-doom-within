@@ -17,9 +17,7 @@
 //
 
 
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "libc/libc.h"
 #include "dstrings.h"
 #include "deh_main.h"
 #include "i_system.h"

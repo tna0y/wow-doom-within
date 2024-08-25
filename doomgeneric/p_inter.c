@@ -35,7 +35,7 @@
 
 #include "p_local.h"
 
-#include "s_sound.h"
+
 
 #include "p_inter.h"
 
@@ -180,8 +180,6 @@ P_GiveWeapon
 			P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
 		player->pendingweapon = weapon;
 
-		if (player == &players[consoleplayer])
-			S_StartSound (NULL, sfx_wpnup);
 		return false;
     }
 	
@@ -654,8 +652,6 @@ P_TouchSpecialThing
 	player->itemcount++;
     P_RemoveMobj (special);
     player->bonuscount += BONUSADD;
-    if (player == &players[consoleplayer])
-	S_StartSound (NULL, sound);
 }
 
 

@@ -19,10 +19,7 @@
 //	Functions to blit a block to the screen.
 //
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
+#include "libc/libc.h"
 #include "i_system.h"
 
 #include "doomtype.h"
@@ -38,7 +35,7 @@
 
 #include "config.h"
 #ifdef HAVE_LIBPNG
-#include <png.h>
+#include "libc/libc.h"
 #endif
 
 // TODO: There are separate RANGECHECK defines for different games, but this
@@ -784,61 +781,7 @@ void WritePNGfile(char *filename, byte *data,
 }
 #endif
 
-//
-// V_ScreenShot
-//
 
-void V_ScreenShot(char *format)
-{
-    int i;
-    char lbmname[16]; // haleyjd 20110213: BUG FIX - 12 is too small!
-    char *ext;
-    
-    // find a file name to save it to
-
-#ifdef HAVE_LIBPNG
-    extern int png_screenshots;
-    if (png_screenshots)
-    {
-        ext = "png";
-    }
-    else
-#endif
-    {
-        ext = "pcx";
-    }
-
-    for (i=0; i<=99; i++)
-    {
-        M_snprintf(lbmname, sizeof(lbmname), format, i, ext);
-
-        if (!M_FileExists(lbmname))
-        {
-            break;      // file doesn't exist
-        }
-    }
-
-    if (i == 100)
-    {
-        I_Error ("V_ScreenShot: Couldn't create a PCX");
-    }
-
-#ifdef HAVE_LIBPNG
-    if (png_screenshots)
-    {
-    WritePNGfile(lbmname, I_VideoBuffer,
-                 SCREENWIDTH, SCREENHEIGHT,
-                 W_CacheLumpName (DEH_String("PLAYPAL"), PU_CACHE));
-    }
-    else
-#endif
-    {
-    // save the pcx file
-    WritePCXfile(lbmname, I_VideoBuffer,
-                 SCREENWIDTH, SCREENHEIGHT,
-                 W_CacheLumpName (DEH_String("PLAYPAL"), PU_CACHE));
-    }
-}
 
 #define MOUSE_SPEED_BOX_WIDTH  120
 #define MOUSE_SPEED_BOX_HEIGHT 9

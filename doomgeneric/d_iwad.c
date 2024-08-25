@@ -16,11 +16,7 @@
 //     to the IWAD type.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-
+#include "libc/libc.h"
 #include "config.h"
 #include "deh_str.h"
 #include "doomkeys.h"
@@ -78,8 +74,7 @@ static void AddIWADDir(char *dir)
 #if defined(_WIN32) && !defined(_WIN32_WCE)
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
+#include "libc/libc.h"
 typedef struct 
 {
     HKEY root;
@@ -318,46 +313,6 @@ static void CheckSteamEdition(void)
     free(install_path);
 }
 
-// The BFG edition ships with a full set of GUS patches. If we find them,
-// we can autoconfigure to use them.
-
-static void CheckSteamGUSPatches(void)
-{
-    const char *current_path;
-    char *install_path;
-    char *patch_path;
-    int len;
-
-    // Already configured? Don't stomp on the user's choices.
-    current_path = M_GetStrVariable("gus_patch_path");
-    if (current_path != NULL && strlen(current_path) > 0)
-    {
-        return;
-    }
-
-    install_path = GetRegistryString(&steam_install_location);
-
-    if (install_path == NULL)
-    {
-        return;
-    }
-
-    len = strlen(install_path) + strlen(STEAM_BFG_GUS_PATCHES) + 20;
-    patch_path = malloc(len);
-    M_snprintf(patch_path, len, "%s\\%s\\ACBASS.PAT",
-               install_path, STEAM_BFG_GUS_PATCHES);
-
-    // Does acbass.pat exist? If so, then set gus_patch_path.
-    if (M_FileExists(patch_path))
-    {
-        M_snprintf(patch_path, len, "%s\\%s",
-                   install_path, STEAM_BFG_GUS_PATCHES);
-        M_SetVariable("gus_patch_path", patch_path);
-    }
-
-    free(patch_path);
-    free(install_path);
-}
 
 // Default install directories for DOS Doom
 
@@ -401,73 +356,6 @@ static boolean DirIsFile(char *path, char *filename)
         && !strcasecmp(&path[path_len - filename_len], filename);
 }
 
-// Check if the specified directory contains the specified IWAD
-// file, returning the full path to the IWAD if found, or NULL
-// if not found.
-
-static char *CheckDirectoryHasIWAD(char *dir, char *iwadname)
-{
-    char *filename; 
-
-    // As a special case, the "directory" may refer directly to an
-    // IWAD file if the path comes from DOOMWADDIR or DOOMWADPATH.
-
-    if (DirIsFile(dir, iwadname) && M_FileExists(dir))
-    {
-        return strdup(dir);
-    }
-
-    // Construct the full path to the IWAD if it is located in
-    // this directory, and check if it exists.
-
-    if (!strcmp(dir, "."))
-    {
-        filename = strdup(iwadname);
-    }
-    else
-    {
-        filename = M_StringJoin(dir, DIR_SEPARATOR_S, iwadname, NULL);
-    }
-
-    printf("Trying IWAD file:%s\n", filename);
-
-    if (M_FileExists(filename))
-    {
-        return filename;
-    }
-
-    free(filename);
-
-    return NULL;
-}
-
-// Search a directory to try to find an IWAD
-// Returns the location of the IWAD if found, otherwise NULL.
-
-static char *SearchDirectoryForIWAD(char *dir, int mask, GameMission_t *mission)
-{
-    char *filename;
-    size_t i;
-
-    for (i=0; i<arrlen(iwads); ++i) 
-    {
-        if (((1 << iwads[i].mission) & mask) == 0)
-        {
-            continue;
-        }
-
-        filename = CheckDirectoryHasIWAD(dir, DEH_String(iwads[i].name));
-
-        if (filename != NULL)
-        {
-            *mission = iwads[i].mission;
-
-            return filename;
-        }
-    }
-
-    return NULL;
-}
 
 // When given an IWAD with the '-iwad' parameter,
 // attempt to identify it by its name.
@@ -619,172 +507,6 @@ static void BuildIWADDirList(void)
 
     iwad_dirs_built = true;
 #endif
-}
-
-//
-// Searches WAD search paths for an WAD with a specific filename.
-// 
-
-char *D_FindWADByName(char *name)
-{
-    char *path;
-    int i;
-    
-    // Absolute path?
-
-    if (M_FileExists(name))
-    {
-        return name;
-    }
-
-    BuildIWADDirList();
-
-    // Search through all IWAD paths for a file with the given name.
-
-    for (i=0; i<num_iwad_dirs; ++i)
-    {
-        // As a special case, if this is in DOOMWADDIR or DOOMWADPATH,
-        // the "directory" may actually refer directly to an IWAD
-        // file.
-
-        if (DirIsFile(iwad_dirs[i], name) && M_FileExists(iwad_dirs[i]))
-        {
-            return strdup(iwad_dirs[i]);
-        }
-
-        // Construct a string for the full path
-
-        path = M_StringJoin(iwad_dirs[i], DIR_SEPARATOR_S, name, NULL);
-
-        if (M_FileExists(path))
-        {
-            return path;
-        }
-
-        free(path);
-    }
-
-    // File not found
-
-    return NULL;
-}
-
-//
-// D_TryWADByName
-//
-// Searches for a WAD by its filename, or passes through the filename
-// if not found.
-//
-
-char *D_TryFindWADByName(char *filename)
-{
-    char *result;
-
-    result = D_FindWADByName(filename);
-
-    if (result != NULL)
-    {
-        return result;
-    }
-    else
-    {
-        return filename;
-    }
-}
-
-//
-// FindIWAD
-// Checks availability of IWAD files by name,
-// to determine whether registered/commercial features
-// should be executed (notably loading PWADs).
-//
-
-char *D_FindIWAD(int mask, GameMission_t *mission)
-{
-    char *result;
-    char *iwadfile;
-    int iwadparm;
-    int i;
-
-    // Check for the -iwad parameter
-
-    //!
-    // Specify an IWAD file to use.
-    //
-    // @arg <file>
-    //
-
-    iwadparm = M_CheckParmWithArgs("-iwad", 1);
-
-    if (iwadparm)
-    {
-        // Search through IWAD dirs for an IWAD with the given name.
-
-        iwadfile = myargv[iwadparm + 1];
-
-        result = D_FindWADByName(iwadfile);
-
-        if (result == NULL)
-        {
-            I_Error("IWAD file '%s' not found!", iwadfile);
-        }
-        
-        *mission = IdentifyIWADByName(result, mask);
-    }
-    else
-    {
-        // Search through the list and look for an IWAD
-
-        printf("-iwad not specified, trying a few iwad names\n");
-
-        result = NULL;
-
-        BuildIWADDirList();
-    
-        for (i=0; result == NULL && i<num_iwad_dirs; ++i)
-        {
-            result = SearchDirectoryForIWAD(iwad_dirs[i], mask, mission);
-        }
-    }
-
-    return result;
-}
-
-// Find all IWADs in the IWAD search path matching the given mask.
-
-const iwad_t **D_FindAllIWADs(int mask)
-{
-    const iwad_t **result;
-    int result_len;
-    char *filename;
-    int i;
-
-    result = malloc(sizeof(iwad_t *) * (arrlen(iwads) + 1));
-    result_len = 0;
-
-    // Try to find all IWADs
-
-    for (i=0; i<arrlen(iwads); ++i)
-    {
-        if (((1 << iwads[i].mission) & mask) == 0)
-        {
-            continue;
-        }
-
-        filename = D_FindWADByName(iwads[i].name);
-
-        if (filename != NULL)
-        {
-            result[result_len] = &iwads[i];
-            ++result_len;
-        }
-    }
-
-    // End of list
-
-    result[result_len] = NULL;
-
-    return result;
 }
 
 //

@@ -18,8 +18,7 @@
 #ifndef DEH_STR_H
 #define DEH_STR_H
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "doomfeatures.h"
 
 // Used to do dehacked text substitutions throughout the program

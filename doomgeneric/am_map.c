@@ -17,8 +17,7 @@
 //
 
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "deh_main.h"
 
 #include "z_zone.h"

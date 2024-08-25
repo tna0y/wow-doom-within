@@ -17,11 +17,7 @@
 //
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-
+#include "libc/libc.h"
 #include "config.h"
 #include "doomtype.h"
 #include "memio.h"
@@ -39,12 +35,7 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-#include <allegro/base.h>
-#include <allegro/midi.h>
-#include <allegro/sound.h>
-#include <allegro/system.h>
-
-
+#include "libc/libc.h"
 #define MAXMIDLENGTH (96 * 1024)
 #define MID_HEADER_MAGIC "MThd"
 #define MUS_HEADER_MAGIC "MUS\x1a"

@@ -14,13 +14,7 @@
 //
 
 
-#include <stdlib.h>
-#include <ctype.h>
-#include <math.h>
-#include <string.h>
-#include <fcntl.h>
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "config.h"
 #include "deh_str.h"
 #include "doomtype.h"

@@ -20,13 +20,13 @@
 #ifndef __W_WAD__
 #define __W_WAD__
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "doomtype.h"
 #include "d_mode.h"
 
 #include "w_file.h"
 
+#include "wad_const.h"
 
 //
 // TYPES
@@ -55,7 +55,7 @@ struct lumpinfo_s
 extern lumpinfo_t *lumpinfo;
 extern unsigned int numlumps;
 
-wad_file_t *W_AddFile (char *filename);
+wad_file_t *W_AddFile (const unsigned char *wad_data, size_t wad_data_len);
 
 int	W_CheckNumForName (char* name);
 int	W_GetNumForName (char* name);

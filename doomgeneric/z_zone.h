@@ -24,8 +24,7 @@
 #ifndef __Z_ZONE__
 #define __Z_ZONE__
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 //
 // ZONE MEMORY
 // PU - purge tags.

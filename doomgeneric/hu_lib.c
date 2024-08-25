@@ -16,8 +16,7 @@
 //
 
 
-#include <ctype.h>
-
+#include "libc/libc.h"
 #include "doomdef.h"
 #include "doomkeys.h"
 

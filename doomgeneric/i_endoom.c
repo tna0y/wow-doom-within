@@ -15,9 +15,7 @@
 //    Exit text-mode ENDOOM screen.
 //
 
-#include <stdio.h>
-#include <string.h>
-
+#include "libc/libc.h"
 #include "config.h"
 #include "doomtype.h"
 #include "i_video.h"
@@ -28,7 +26,7 @@
 
 
 #ifdef __DJGPP__
-#include <go32.h>
+#include "libc/libc.h"
 #endif  // __DJGPP__
 
 

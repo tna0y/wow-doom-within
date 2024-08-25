@@ -22,10 +22,7 @@
 
 
 
-#include <stdlib.h>
-#include <math.h>
-
-
+#include "libc/libc.h"
 #include "doomdef.h"
 #include "d_loop.h"
 

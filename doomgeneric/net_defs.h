@@ -18,8 +18,7 @@
 #ifndef NET_DEFS_H
 #define NET_DEFS_H 
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "doomtype.h"
 #include "d_ticcmd.h"
 #include "sha1.h"

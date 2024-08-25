@@ -16,10 +16,7 @@
 //       Generate a checksum of the WAD directory.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "libc/libc.h"
 #include "m_misc.h"
 #include "sha1.h"
 #include "w_checksum.h"

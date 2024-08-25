@@ -19,9 +19,7 @@
 //
 
 
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "libc/libc.h"
 #include "i_system.h"
 #include "z_zone.h"
 #include "w_wad.h"

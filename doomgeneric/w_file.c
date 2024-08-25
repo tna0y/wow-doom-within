@@ -16,8 +16,7 @@
 //	WAD I/O functions.
 //
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "config.h"
 
 #include "doomtype.h"
@@ -90,6 +89,8 @@ void W_CloseFile(wad_file_t *wad)
 size_t W_Read(wad_file_t *wad, unsigned int offset,
               void *buffer, size_t buffer_len)
 {
+    printf("w_read not implemented\n");
+    exit(111);
     return wad->file_class->Read(wad, offset, buffer, buffer_len);
 }
 

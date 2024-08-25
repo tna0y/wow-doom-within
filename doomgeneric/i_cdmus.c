@@ -16,8 +16,7 @@
 // SDL implementation of the Hexen CD interface.
 //
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #ifdef ORIGCODE
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_cdrom.h"

@@ -20,8 +20,7 @@
 
 
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "z_zone.h"
@@ -46,7 +45,7 @@
 #include "am_map.h"
 #include "m_cheat.h"
 
-#include "s_sound.h"
+
 
 // Needs access to LFB.
 #include "v_video.h"
@@ -530,8 +529,6 @@ ST_Responder (event_t* ev)
 	  
 	  if (((buf[0]-'0')*10 + buf[1]-'0') > 35)
 	    plyr->message = DEH_String(STSTR_NOMUS);
-	  else
-	    S_ChangeMusic(musnum, 1);
 	}
 	else
 	{
@@ -539,8 +536,6 @@ ST_Responder (event_t* ev)
 	  
 	  if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
 	    plyr->message = DEH_String(STSTR_NOMUS);
-	  else
-	    S_ChangeMusic(musnum, 1);
 	}
       }
       else if ( (logical_gamemission == doom 

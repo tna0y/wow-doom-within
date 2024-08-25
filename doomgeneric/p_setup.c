@@ -19,8 +19,7 @@
 
 
 
-#include <math.h>
-
+#include "libc/libc.h"
 #include "z_zone.h"
 
 #include "deh_main.h"
@@ -36,7 +35,7 @@
 #include "doomdef.h"
 #include "p_local.h"
 
-#include "s_sound.h"
+
 
 #include "doomstat.h"
 
@@ -763,8 +762,6 @@ P_SetupLevel
     // will be set by player think.
     players[consoleplayer].viewz = 1; 
 
-    // Make sure all sounds are stopped before Z_FreeTags.
-    S_Start ();			
 
     Z_FreeTags (PU_LEVEL, PU_PURGELEVEL-1);
 

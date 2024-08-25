@@ -17,8 +17,7 @@
 //	Switches, buttons. Two-state animation. Exits.
 //
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "i_system.h"
 #include "deh_main.h"
 #include "doomdef.h"
@@ -26,7 +25,7 @@
 
 #include "g_game.h"
 
-#include "s_sound.h"
+
 
 // Data.
 #include "sounds.h"
@@ -219,7 +218,6 @@ P_ChangeSwitchTexture
     {
 	if (switchlist[i] == texTop)
 	{
-	    S_StartSound(buttonlist->soundorg,sound);
 	    sides[line->sidenum[0]].toptexture = switchlist[i^1];
 
 	    if (useAgain)
@@ -231,7 +229,6 @@ P_ChangeSwitchTexture
 	{
 	    if (switchlist[i] == texMid)
 	    {
-		S_StartSound(buttonlist->soundorg,sound);
 		sides[line->sidenum[0]].midtexture = switchlist[i^1];
 
 		if (useAgain)
@@ -243,7 +240,6 @@ P_ChangeSwitchTexture
 	    {
 		if (switchlist[i] == texBot)
 		{
-		    S_StartSound(buttonlist->soundorg,sound);
 		    sides[line->sidenum[0]].bottomtexture = switchlist[i^1];
 
 		    if (useAgain)

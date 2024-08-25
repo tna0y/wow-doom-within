@@ -16,11 +16,7 @@
 //
 
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "libc/libc.h"
 #include "doomtype.h"
 #include "i_system.h"
 #include "m_misc.h"

@@ -35,8 +35,7 @@
 #else  // __DJGPP__
 
 
-#include <SDL_endian.h>
-
+#include "libc/libc.h"
 // Endianess handling.
 // WAD files are stored little endian.
 

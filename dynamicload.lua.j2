@@ -1,0 +1,23 @@
+{% for i in range(chunks_len) %}
+local function loadChunk_{{name}}_{{ i }}(CPU)
+    local mem_sections = {
+    {% for address, value in chunks[i].items() %}
+        [{{ address | hex }}] = {{ value | hex }},{% endfor %}
+    }
+    CPU:SetMemory(CPU, mem_sections)
+end
+{% endfor %}
+
+function _DW_Init_{{ name }}(CPU)
+    CPU.entrypoint = {{ entrypoint | hex }}
+    CPU.stack_pointer = {{ stack_pointer | hex }}
+    CPU.heap_start = {{ heap_start | hex }}
+    CPU:StoreRegister(2, {{ stack_pointer | hex }})
+    CPU.memory:InitMemoryRange(0x7ee00000, 0x7ff00004)
+end
+
+
+_DW_DoomLoadFuncs = {
+    {% for i in range(chunks_len) %}[{{i + 1}}] = loadChunk_{{name}}_{{ i }},
+    {% endfor %}
+}

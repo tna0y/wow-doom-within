@@ -16,10 +16,7 @@
 // memory.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "libc/libc.h"
 #include "memio.h"
 
 #include "z_zone.h"

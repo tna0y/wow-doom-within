@@ -19,11 +19,7 @@
 
 
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include "libc/libc.h"
 #include "doomtype.h"
 
 #include "config.h"
@@ -136,7 +132,7 @@ static void ExtendLumpInfo(int newnumlumps)
 // Other files are single lumps with the base filename
 //  for the lump name.
 
-wad_file_t *W_AddFile (char *filename)
+wad_file_t *W_AddFile (const unsigned char *wad_data, size_t wad_data_len)
 {
     wadinfo_t header;
     lumpinfo_t *lump_p;
@@ -147,42 +143,20 @@ wad_file_t *W_AddFile (char *filename)
     filelump_t *fileinfo;
     filelump_t *filerover;
     int newnumlumps;
-
     // open the file and add to directory
+    const char *filename = "doom1.wad";
+    printf(
+        "zalupa\n"
+    );
 
-    wad_file = W_OpenFile(filename);
-
-    if (wad_file == NULL)
-    {
-		printf (" couldn't open %s\n", filename);
-		return NULL;
-    }
 
     newnumlumps = numlumps;
 
-    if (strcasecmp(filename+strlen(filename)-3 , "wad" ) )
-    {
-    	// single lump file
-
-        // fraggle: Swap the filepos and size here.  The WAD directory
-        // parsing code expects a little-endian directory, so will swap
-        // them back.  Effectively we're constructing a "fake WAD directory"
-        // here, as it would appear on disk.
-
-		fileinfo = Z_Malloc(sizeof(filelump_t), PU_STATIC, 0);
-		fileinfo->filepos = LONG(0);
-		fileinfo->size = LONG(wad_file->length);
-
-        // Name the lump after the base of the filename (without the
-        // extension).
-
-		M_ExtractFileBase (filename, fileinfo->name);
-		newnumlumps++;
-    }
-    else 
     {
     	// WAD file
-        W_Read(wad_file, 0, &header, sizeof(header));
+
+        // W_Read(wad_file, 0, &header, sizeof(header));
+        memcpy(&header, wad_data, sizeof(header));
 
 		if (strncmp(header.identification,"IWAD",4))
 		{
@@ -201,10 +175,10 @@ wad_file_t *W_AddFile (char *filename)
 		length = header.numlumps*sizeof(filelump_t);
 		fileinfo = Z_Malloc(length, PU_STATIC, 0);
 
-        W_Read(wad_file, header.infotableofs, fileinfo, length);
+        //W_Read(wad_file, header.infotableofs, fileinfo, length);
+        memcpy(fileinfo, wad_data + header.infotableofs, length);
         newnumlumps += header.numlumps;
     }
-
     // Increase size of numlumps array to accomodate the new file.
     startlump = numlumps;
     ExtendLumpInfo(newnumlumps);
@@ -341,7 +315,7 @@ int W_LumpLength (unsigned int lump)
 //
 void W_ReadLump(unsigned int lump, void *dest)
 {
-    int c;
+    // int c;
     lumpinfo_t *l;
 	
     if (lump >= numlumps)
@@ -353,13 +327,10 @@ void W_ReadLump(unsigned int lump, void *dest)
 	
     I_BeginRead ();
 	
-    c = W_Read(l->wad_file, l->position, dest, l->size);
+    // c = W_Read(l->wad_file, l->position, dest, l->size);
+    memcpy(dest,doom1_wad_file + l->position, l->size);
 
-    if (c < l->size)
-    {
-	I_Error ("W_ReadLump: only read %i of %i on lump %i",
-		 c, l->size, lump);	
-    }
+    
 
     I_EndRead ();
 }
@@ -383,7 +354,6 @@ void *W_CacheLumpNum(int lumpnum, int tag)
 {
     byte *result;
     lumpinfo_t *lump;
-
     if ((unsigned)lumpnum >= numlumps)
     {
 	I_Error ("W_CacheLumpNum: %i >= numlumps", lumpnum);
@@ -396,13 +366,7 @@ void *W_CacheLumpNum(int lumpnum, int tag)
     // region.  If the lump is in an ordinary file, we may already
     // have it cached; otherwise, load it into memory.
 
-    if (lump->wad_file->mapped != NULL)
-    {
-        // Memory mapped file, return from the mmapped region.
-
-        result = lump->wad_file->mapped + lump->position;
-    }
-    else if (lump->cache != NULL)
+    if (lump->cache != NULL)
     {
         // Already cached, so just switch the zone tag.
 
@@ -414,10 +378,10 @@ void *W_CacheLumpNum(int lumpnum, int tag)
         // Not yet loaded, so load it now
 
         lump->cache = Z_Malloc(W_LumpLength(lumpnum), tag, &lump->cache);
-	W_ReadLump (lumpnum, lump->cache);
+	    W_ReadLump (lumpnum, lump->cache);
         result = lump->cache;
     }
-	
+
     return result;
 }
 
@@ -452,14 +416,8 @@ void W_ReleaseLumpNum(int lumpnum)
 
     lump = &lumpinfo[lumpnum];
 
-    if (lump->wad_file->mapped != NULL)
-    {
-        // Memory-mapped file, so nothing needs to be done here.
-    }
-    else
-    {
-        Z_ChangeTag(lump->cache, PU_CACHE);
-    }
+    
+    Z_ChangeTag(lump->cache, PU_CACHE);
 }
 
 void W_ReleaseLumpName(char *name)

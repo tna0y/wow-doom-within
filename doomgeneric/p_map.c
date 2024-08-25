@@ -17,9 +17,7 @@
 //	Shooting and aiming.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "libc/libc.h"
 #include "deh_misc.h"
 
 #include "m_bbox.h"
@@ -31,7 +29,7 @@
 #include "m_misc.h"
 #include "p_local.h"
 
-#include "s_sound.h"
+
 
 // State.
 #include "doomstat.h"
@@ -1147,9 +1145,7 @@ boolean	PTR_UseTraverse (intercept_t* in)
     {
 	P_LineOpening (in->d.line);
 	if (openrange <= 0)
-	{
-	    S_StartSound (usething, sfx_noway);
-	    
+	{	    
 	    // can't use through a wall
 	    return false;	
 	}

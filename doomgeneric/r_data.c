@@ -17,8 +17,7 @@
 //	generation of lookups, caching, retrieval by name.
 //
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "deh_main.h"
 #include "i_swap.h"
 #include "i_system.h"
@@ -482,10 +481,10 @@ void R_InitTextures (void)
     int			temp2;
     int			temp3;
 
-    
     // Load the patch names from pnames.lmp.
     name[8] = 0;
     names = W_CacheLumpName (DEH_String("PNAMES"), PU_STATIC);
+
     nummappatches = LONG ( *((int *)names) );
     name_p = names + 4;
     patchlookup = Z_Malloc(nummappatches*sizeof(*patchlookup), PU_STATIC, NULL);
@@ -495,6 +494,7 @@ void R_InitTextures (void)
         M_StringCopy(name, name_p + i * 8, sizeof(name));
         patchlookup[i] = W_CheckNumForName(name);
     }
+
     W_ReleaseLumpName(DEH_String("PNAMES"));
 
     // Load the map texture definitions from textures.lmp.
@@ -504,7 +504,7 @@ void R_InitTextures (void)
     numtextures1 = LONG(*maptex);
     maxoff = W_LumpLength (W_GetNumForName (DEH_String("TEXTURE1")));
     directory = maptex+1;
-	
+
     if (W_CheckNumForName (DEH_String("TEXTURE2")) != -1)
     {
 	maptex2 = W_CacheLumpName (DEH_String("TEXTURE2"), PU_STATIC);

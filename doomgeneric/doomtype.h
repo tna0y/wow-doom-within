@@ -32,7 +32,7 @@
 
 #else
 
-#include <strings.h>
+#include "libc/libc.h"
 
 #endif
 
@@ -60,8 +60,7 @@
 // pre-standardisation version).  inttypes.h is also in the C99 
 // standard and defined to include stdint.h, so include this. 
 
-#include <inttypes.h>
-
+#include "libc/libc.h"
 #ifdef __cplusplus
 
 // Use builtin bool type with C++.
@@ -81,8 +80,7 @@ typedef enum
 
 typedef uint8_t byte;
 
-#include <limits.h>
-
+#include "libc/libc.h"
 #if defined(_WIN32) || defined(__DJGPP__)
 
 #define DIR_SEPARATOR '\\'

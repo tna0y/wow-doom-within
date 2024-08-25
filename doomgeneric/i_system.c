@@ -17,17 +17,12 @@
 
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <stdarg.h>
-
+#include "libc/libc.h"
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "libc/libc.h"
 #else
-#include <unistd.h>
+#include "libc/libc.h"
 #endif
 
 #ifdef ORIGCODE
@@ -42,7 +37,6 @@
 #include "m_config.h"
 #include "m_misc.h"
 #include "i_joystick.h"
-#include "i_sound.h"
 #include "i_timer.h"
 #include "i_video.h"
 
@@ -52,7 +46,7 @@
 #include "z_zone.h"
 
 #ifdef __MACOSX__
-#include <CoreFoundation/CFUserNotification.h>
+#include "libc/libc.h"
 #endif
 
 #define DEFAULT_RAM 6 /* MiB */

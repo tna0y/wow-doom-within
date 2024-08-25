@@ -16,8 +16,7 @@
 //	WAD I/O functions.
 //
 
-#include <stdio.h>
-
+#include "libc/libc.h"
 #include "m_misc.h"
 #include "w_file.h"
 #include "z_zone.h"

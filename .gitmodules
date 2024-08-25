@@ -1,0 +1,3 @@
+[submodule "risc-v-wow-emu"]
+	path = risc-v-wow-emu
+	url = git@github.com:vladvis/risc-v-wow-emu.git

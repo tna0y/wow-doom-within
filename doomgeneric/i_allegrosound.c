@@ -19,12 +19,7 @@
 
 #include "config.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <ctype.h>
-
+#include "libc/libc.h"
 #include "deh_str.h"
 #include "i_sound.h"
 #include "i_system.h"
@@ -36,11 +31,7 @@
 
 #include "doomtype.h"
 
-#include <allegro/base.h>
-#include <allegro/sound.h>
-#include <allegro/system.h>
-
-
+#include "libc/libc.h"
 #define NUM_CHANNELS 16
 
 #define NUM_MIDI_CHANNELS 16

@@ -17,8 +17,7 @@
 //	all OS independend parts.
 //
 
-#include <stdlib.h>
-
+#include "libc/libc.h"
 #include "doomfeatures.h"
 
 #include "d_main.h"

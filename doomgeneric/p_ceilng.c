@@ -21,7 +21,7 @@
 #include "doomdef.h"
 #include "p_local.h"
 
-#include "s_sound.h"
+
 
 // State.
 #include "doomstat.h"
@@ -58,19 +58,6 @@ void T_MoveCeiling (ceiling_t* ceiling)
 			  ceiling->topheight,
 			  false,1,ceiling->direction);
 	
-	if (!(leveltime&7))
-	{
-	    switch(ceiling->type)
-	    {
-	      case silentCrushAndRaise:
-		break;
-	      default:
-		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
-		// ?
-		break;
-	    }
-	}
-	
 	if (res == pastdest)
 	{
 	    switch(ceiling->type)
@@ -80,7 +67,6 @@ void T_MoveCeiling (ceiling_t* ceiling)
 		break;
 		
 	      case silentCrushAndRaise:
-		S_StartSound(&ceiling->sector->soundorg, sfx_pstop);
 	      case fastCrushAndRaise:
 	      case crushAndRaise:
 		ceiling->direction = -1;
@@ -99,23 +85,12 @@ void T_MoveCeiling (ceiling_t* ceiling)
 			  ceiling->speed,
 			  ceiling->bottomheight,
 			  ceiling->crush,1,ceiling->direction);
-	
-	if (!(leveltime&7))
-	{
-	    switch(ceiling->type)
-	    {
-	      case silentCrushAndRaise: break;
-	      default:
-		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
-	    }
-	}
-	
+		
 	if (res == pastdest)
 	{
 	    switch(ceiling->type)
 	    {
 	      case silentCrushAndRaise:
-		S_StartSound(&ceiling->sector->soundorg, sfx_pstop);
 	      case crushAndRaise:
 		ceiling->speed = CEILSPEED;
 	      case fastCrushAndRaise:
