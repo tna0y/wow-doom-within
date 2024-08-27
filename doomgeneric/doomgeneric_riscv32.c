@@ -12,7 +12,8 @@
 #define SYS_WOW_sleep             104
 #define SYS_WOW_draw_column       105
 #define SYS_WOW_draw_span         106
-#define SYS_WOW_DG_memcpy            107
+#define SYS_WOW_draw_patch        107
+#define SYS_WOW_DG_memcpy         108
 
 #define KEYQUEUE_SIZE 16
 
@@ -200,7 +201,7 @@ static void handleKeyInputs() {
         cur = checkKeyPressed(i);
         last = key_state[i];
         if (cur != last){
-            // addKeyToQueue(cur > last, i);
+            addKeyToQueue(cur > last, i);
             key_state[i] = cur;
         }
     }
@@ -276,6 +277,47 @@ void DG_DrawSpan(uint8_t* dest, uint8_t* ds_colormap, uint8_t* ds_source, unsign
 #endif
 }
 
+void DG_DrawPatch(int col, int w, int x, uint8_t *desttop, uint8_t* source, uint8_t *m_col, uint8_t *m_patch) {
+#ifdef ENABLE_WOW_API
+    asm volatile (
+        "mv a0, %0\n"  
+        "mv a1, %1\n"  
+        "mv a2, %2\n"  
+        "mv a3, %3\n"  
+        "mv a4, %4\n"  
+        "mv a5, %5\n"  
+        "mv a6, %6\n"  
+        "li a7, %7\n"  
+        "ecall\n"      
+        : 
+        : "r" (col), "r" (w), "r" (x), "r" (desttop), "r" (source), "r" (m_col), "r" (m_patch), "i" (SYS_WOW_draw_patch)  
+        : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"  
+    );
+#else
+    int count;
+    uint8_t* dest;
+
+    for ( ; col<w ; x++, col++, desttop++)
+    {
+        m_col = ((byte *)m_patch + LONG(*(int *)((char *)m_patch + 8 + col * 4))); // + (*(m_patch + 8 + 4 * col)) );
+
+        // step through the posts in a column
+        while (*(m_col) != 0xff )
+        {
+            source = m_col + 3;
+            dest = desttop + (*m_col)*320;
+            count = *(m_col + 1);
+
+            while (count--)
+            {
+                *dest = *source++;
+                dest += 320;
+            }
+            m_col = (m_col + *(m_col + 1) + 4);
+        }
+    }
+#endif
+}
 
 void* DG_memcpy(uint8_t *dest, uint8_t* src, size_t len) {
 #ifdef ENABLE_WOW_API

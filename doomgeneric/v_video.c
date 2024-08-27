@@ -170,26 +170,30 @@ void V_DrawPatch(int x, int y, patch_t *patch)
 
     w = SHORT(patch->width);
 
-    for ( ; col<w ; x++, col++, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
+    // for ( ; col<w ; x++, col++, desttop++)
+    // {
+    //     column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
 
-        // step through the posts in a column
-        while (column->topdelta != 0xff)
-        {
-            source = (byte *)column + 3;
-            dest = desttop + column->topdelta*SCREENWIDTH;
-            count = column->length;
+    //     // step through the posts in a column
+    //     while (column->topdelta != 0xff)
+    //     {
+    //         source = (byte *)column + 3;
+    //         dest = desttop + column->topdelta*SCREENWIDTH;
+    //         count = column->length;
 
-            while (count--)
-            {
-                *dest = *source++;
-                dest += SCREENWIDTH;
-            }
-            column = (column_t *)((byte *)column + column->length + 4);
-        }
-    }
+    //         while (count--)
+    //         {
+    //             *dest = *source++;
+    //             dest += SCREENWIDTH;
+    //         }
+    //         column = (column_t *)((byte *)column + column->length + 4);
+    //     }
+    // }
+    byte* m_col = (byte *)column;
+    byte* m_patch = (byte *)patch;
+    DG_DrawPatch(col, w, x, desttop, source, m_col, m_patch);
 }
+
 
 //
 // V_DrawPatchFlipped
