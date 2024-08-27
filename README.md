@@ -118,6 +118,8 @@ The following optimizations were implemented:
 - **Adress-level instruction cache:** In repeating code only a single table lookup is now required per instruction.
 - **Precalculating parts of instruction code:** When first loading instructions anything that can be calculated in advance is stored.
 - **Memcpy:** implemented in Lua reducing overall executed instruction count by ~10%.
+- **Instruction chaining:** During decoding we build function chains up until the next branching instruction. Thus we do not return to main loop so much, provides less overhead.
+- **pc decoding-time evaluation:** PC for a given function is known during decoding allowing to perform all pc-related calculations during instruction decoding.
 
 ## Development
 
