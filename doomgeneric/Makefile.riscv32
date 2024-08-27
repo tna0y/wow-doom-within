@@ -13,7 +13,7 @@ endif
 
 
 # CC=/opt/toolchains/riscv32/bin/riscv32-unknown-elf-gcc  # gcc or g++
-CFLAGS+=-O3
+CFLAGS+=-O3 -mbranch-cost=1
 LDFLAGS+=-Wl,--gc-sections
 CFLAGS+=-Wall -DNORMALUNIX -DLINUX -DSNDSERV -D_DEFAULT_SOURCE -DCMAP256 # -DUSEASM
 LIBS+=-lm -lc -static

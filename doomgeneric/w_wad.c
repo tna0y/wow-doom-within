@@ -97,7 +97,7 @@ static void ExtendLumpInfo(int newnumlumps)
     // pointers to the new location.
     for (i = 0; i < numlumps && i < newnumlumps; ++i)
     {
-        memcpy(&newlumpinfo[i], &lumpinfo[i], sizeof(lumpinfo_t));
+        DG_memcpy(&newlumpinfo[i], &lumpinfo[i], sizeof(lumpinfo_t));
 
         if (newlumpinfo[i].cache != NULL)
         {
@@ -145,9 +145,9 @@ wad_file_t *W_AddFile (const unsigned char *wad_data, size_t wad_data_len)
     int newnumlumps;
     // open the file and add to directory
     const char *filename = "doom1.wad";
-    printf(
-        "zalupa\n"
-    );
+    // printf(
+    //     "zalupa\n"
+    // );
 
 
     newnumlumps = numlumps;
@@ -156,7 +156,7 @@ wad_file_t *W_AddFile (const unsigned char *wad_data, size_t wad_data_len)
     	// WAD file
 
         // W_Read(wad_file, 0, &header, sizeof(header));
-        memcpy(&header, wad_data, sizeof(header));
+        DG_memcpy(&header, wad_data, sizeof(header));
 
 		if (strncmp(header.identification,"IWAD",4))
 		{
@@ -176,7 +176,7 @@ wad_file_t *W_AddFile (const unsigned char *wad_data, size_t wad_data_len)
 		fileinfo = Z_Malloc(length, PU_STATIC, 0);
 
         //W_Read(wad_file, header.infotableofs, fileinfo, length);
-        memcpy(fileinfo, wad_data + header.infotableofs, length);
+        DG_memcpy(fileinfo, wad_data + header.infotableofs, length);
         newnumlumps += header.numlumps;
     }
     // Increase size of numlumps array to accomodate the new file.
@@ -328,7 +328,7 @@ void W_ReadLump(unsigned int lump, void *dest)
     I_BeginRead ();
 	
     // c = W_Read(l->wad_file, l->position, dest, l->size);
-    memcpy(dest,doom1_wad_file + l->position, l->size);
+    DG_memcpy(dest,doom1_wad_file + l->position, l->size);
 
     
 
@@ -469,7 +469,7 @@ void W_Profile (void)
 
     for (i=0 ; i<numlumps ; i++)
     {
-	memcpy (name,lumpinfo[i].name,8);
+	DG_memcpy (name,lumpinfo[i].name,8);
 
 	for (j=0 ; j<8 ; j++)
 	    if (!name[j])

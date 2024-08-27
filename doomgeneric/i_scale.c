@@ -82,7 +82,7 @@ static boolean I_Scale1x(int x1, int y1, int x2, int y2)
 
     for (y=y1; y<y2; ++y)
     {
-        memcpy(screenp, bufp, w);
+        DG_memcpy(screenp, bufp, w);
         screenp += dest_pitch;
         bufp += SCREENWIDTH;
     }
@@ -467,7 +467,7 @@ static boolean I_Stretch1x(int x1, int y1, int x2, int y2)
     for (y=0; y<SCREENHEIGHT; y += 5)
     {
         // 100% line 0
-        memcpy(screenp, bufp, SCREENWIDTH);
+        DG_memcpy(screenp, bufp, SCREENWIDTH);
         screenp += dest_pitch;
 
         // 20% line 0, 80% line 1
@@ -487,7 +487,7 @@ static boolean I_Stretch1x(int x1, int y1, int x2, int y2)
         screenp += dest_pitch; bufp += SCREENWIDTH;
 
         // 100% line 4
-        memcpy(screenp, bufp, SCREENWIDTH);
+        DG_memcpy(screenp, bufp, SCREENWIDTH);
         screenp += dest_pitch; bufp += SCREENWIDTH;
     }
 

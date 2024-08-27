@@ -39,6 +39,7 @@ addon: doomgeneric_lua
 	echo "## Interface: $(WOWVER)" > $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
 	echo "## Title: $(ADDON_NAME)" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc	
 	echo "## Version: $(VERSION)" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
+	echo "## SavedVariables: DoomWithinProfiling" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
 	find $(ADDON_BUILD_DIR) -type f -not -name "$(ADDON_NAME).toc" | xargs -I {} basename {} >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
 
 release: addon

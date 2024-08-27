@@ -263,7 +263,7 @@ void R_InitSpriteDefs (char** namelist)
         sprites[i].numframes = maxframe;
         sprites[i].spriteframes = 
             Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
-        memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
+        DG_memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
     }
 
 }

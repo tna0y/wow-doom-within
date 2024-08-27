@@ -107,7 +107,7 @@ void V_CopyRect(int srcx, int srcy, byte *source,
 
     for ( ; height>0 ; height--) 
     { 
-        memcpy(dest, src, width); 
+        DG_memcpy(dest, src, width); 
         src += SCREENWIDTH; 
         dest += SCREENWIDTH; 
     } 
@@ -517,7 +517,7 @@ void V_DrawBlock(int x, int y, int width, int height, byte *src)
 
     while (height--) 
     { 
-	memcpy (dest, src, width); 
+	DG_memcpy (dest, src, width); 
 	src += width; 
 	dest += SCREENWIDTH; 
     } 
@@ -585,7 +585,7 @@ void V_DrawBox(int x, int y, int w, int h, int c)
  
 void V_DrawRawScreen(byte *raw)
 {
-    memcpy(dest_screen, raw, SCREENWIDTH * SCREENHEIGHT);
+    DG_memcpy(dest_screen, raw, SCREENWIDTH * SCREENHEIGHT);
 }
 
 //

@@ -804,7 +804,7 @@ void TryRunTics (void)
             if (gametic/ticdup > lowtic)
                 I_Error ("gametic>lowtic");
 
-            memcpy(local_playeringame, set->ingame, sizeof(local_playeringame));
+            DG_memcpy(local_playeringame, set->ingame, sizeof(local_playeringame));
 
             loop_interface->RunTic(set->cmds, set->ingame);
 	    gametic++;

@@ -853,13 +853,13 @@ void R_FillBackScreen (void)
     { 
 	for (x=0 ; x<SCREENWIDTH/64 ; x++) 
 	{ 
-	    memcpy (dest, src+((y&63)<<6), 64); 
+	    DG_memcpy (dest, src+((y&63)<<6), 64); 
 	    dest += 64; 
 	} 
 
 	if (SCREENWIDTH&63) 
 	{ 
-	    memcpy (dest, src+((y&63)<<6), SCREENWIDTH&63); 
+	    DG_memcpy (dest, src+((y&63)<<6), SCREENWIDTH&63); 
 	    dest += (SCREENWIDTH&63); 
 	} 
     } 
@@ -915,14 +915,14 @@ R_VideoErase
   int		count ) 
 { 
   // LFB copy.
-  // This might not be a good idea if memcpy
+  // This might not be a good idea if DG_memcpy
   //  is not optiomal, e.g. byte by byte on
   //  a 32bit CPU, as GNU GCC/Linux libc did
   //  at one point.
 
     if (background_buffer != NULL)
     {
-        memcpy(I_VideoBuffer + ofs, background_buffer + ofs, count); 
+        DG_memcpy(I_VideoBuffer + ofs, background_buffer + ofs, count); 
     }
 } 
 

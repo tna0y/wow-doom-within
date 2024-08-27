@@ -12,6 +12,7 @@
 #define SYS_WOW_sleep             104
 #define SYS_WOW_draw_column       105
 #define SYS_WOW_draw_span         106
+#define SYS_WOW_DG_memcpy            107
 
 #define KEYQUEUE_SIZE 16
 
@@ -199,7 +200,7 @@ static void handleKeyInputs() {
         cur = checkKeyPressed(i);
         last = key_state[i];
         if (cur != last){
-            addKeyToQueue(cur > last, i);
+            // addKeyToQueue(cur > last, i);
             key_state[i] = cur;
         }
     }
@@ -272,6 +273,25 @@ void DG_DrawSpan(uint8_t* dest, uint8_t* ds_colormap, uint8_t* ds_source, unsign
         position += step;
 
     } while (count--);
+#endif
+}
+
+
+void* DG_memcpy(uint8_t *dest, uint8_t* src, size_t len) {
+#ifdef ENABLE_WOW_API
+    asm volatile (
+        "mv a0, %0\n"  
+        "mv a1, %1\n"  
+        "mv a2, %2\n"  
+        "li a7, %3\n"  
+        "ecall\n"      
+        : 
+        : "r" (dest), "r" (src), "r" (len), "i" (SYS_WOW_DG_memcpy)  
+        : "a0", "a1", "a2", "a7"  
+    );
+    return dest;
+#else
+    return memcpy(dest, src, len);
 #endif
 }
 

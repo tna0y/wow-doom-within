@@ -118,7 +118,7 @@ static boolean CacheSFX(sfxinfo_t *sfxinfo)
 	if (sample == NULL) {
 		return false;
 	}
-	memcpy(sample->data, data, length);
+	DG_memcpy(sample->data, data, length);
 
 	sfxinfo->driver_data = sample;
 

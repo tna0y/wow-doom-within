@@ -77,6 +77,7 @@ We extended the interface with two additional functions, identified through prof
 
 - `DG_DrawColumn`
 - `DG_DrawSpan`
+- `DG_memcpy`
 
 ### Syscall Table
 
@@ -90,6 +91,7 @@ Below is the current syscall table. Note that it bears little resemblance to Lin
 | `SYS_WOW_sleep`            | 104    | Sleep implementation. Can be used to switch the execution context back to WoW.       |
 | `SYS_WOW_draw_column`      | 105    | Optimization. Column draw loop implemented directly in Lua.                          |
 | `SYS_WOW_draw_span`        | 106    | Optimization. Span draw loop implemented directly in Lua.                            |
+| `SYS_WOW_memcpy   `        | 107    | Optimization. memcpy implemented directly in Lua.                                    |
 | `exit`                     | 93     | Allows for proper termination.                                                       |
 | `write`                    | 64     | Useful for debugging, only `1` and `2` file descriptors are supported.               |
 | `newfstat`                 | 80     | No-op, called by `printf`.                                                           |
@@ -113,6 +115,9 @@ The following optimizations were implemented:
 - **RANGECHECK undefined:** The `RANGECHECK` was undefined in the game source code, resulting in a marginal performance improvement.
 - **Syscall optimization:** `R_DrawColumn` and `R_DrawSpan` function loops were moved to separate syscalls, providing a major performance improvement.
 - **Aligned memory access:** Frame rendering uses aligned memory access, resulting in a minor performance improvement.
+- **Adress-level instruction cache:** In repeating code only a single table lookup is now required per instruction.
+- **Precalculating parts of instruction code:** When first loading instructions anything that can be calculated in advance is stored.
+- **Memcpy:** implemented in Lua reducing overall executed instruction count by ~10%.
 
 ## Development
 

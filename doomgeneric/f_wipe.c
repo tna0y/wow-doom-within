@@ -54,7 +54,7 @@ wipe_shittyColMajorXform
 	for(x=0;x<width;x++)
 	    dest[x*height+y] = array[y*width+x];
 
-    memcpy(array, dest, width*height*2);
+    DG_memcpy(array, dest, width*height*2);
 
     Z_Free(dest);
 
@@ -66,7 +66,7 @@ wipe_initColorXForm
   int	height,
   int	ticks )
 {
-    memcpy(wipe_scr, wipe_scr_start, width*height);
+    DG_memcpy(wipe_scr, wipe_scr_start, width*height);
     return 0;
 }
 
@@ -137,7 +137,7 @@ wipe_initMelt
     int i, r;
     
     // copy start screen to main screen
-    memcpy(wipe_scr, wipe_scr_start, width*height);
+    DG_memcpy(wipe_scr, wipe_scr_start, width*height);
     
     // makes this wipe faster (in theory)
     // to have stuff in column-major format

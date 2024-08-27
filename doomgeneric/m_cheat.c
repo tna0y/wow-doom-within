@@ -82,7 +82,7 @@ cht_GetParam
 ( cheatseq_t*	cht,
   char*		buffer )
 {
-    memcpy(buffer, cht->parameter_buf, cht->parameter_chars);
+    DG_memcpy(buffer, cht->parameter_buf, cht->parameter_chars);
 }
 
 

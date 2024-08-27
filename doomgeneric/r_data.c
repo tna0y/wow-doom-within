@@ -208,7 +208,7 @@ R_DrawColumnInCache
 	    count = cacheheight - position;
 
 	if (count > 0)
-	    memcpy (cache + position, source, count);
+	    DG_memcpy (cache + position, source, count);
 		
 	patch = (column_t *)(  (byte *)patch + patch->length + 4); 
     }
@@ -577,7 +577,7 @@ void R_InitTextures (void)
 	texture->height = SHORT(mtexture->height);
 	texture->patchcount = SHORT(mtexture->patchcount);
 	
-	memcpy (texture->name, mtexture->name, sizeof(texture->name));
+	DG_memcpy (texture->name, mtexture->name, sizeof(texture->name));
 	mpatch = &mtexture->patches[0];
 	patch = &texture->patches[0];
 
@@ -727,7 +727,7 @@ int R_FlatNumForName (char* name)
     if (i == -1)
     {
 	namet[8] = 0;
-	memcpy (namet, name,8);
+	DG_memcpy (namet, name,8);
 	I_Error ("R_FlatNumForName: %s not found",namet);
     }
     return i - firstflat;

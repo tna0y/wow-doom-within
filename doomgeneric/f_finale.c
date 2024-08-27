@@ -231,12 +231,12 @@ void F_TextWrite (void)
     {
 	for (x=0 ; x<SCREENWIDTH/64 ; x++)
 	{
-	    memcpy (dest, src+((y&63)<<6), 64);
+	    DG_memcpy (dest, src+((y&63)<<6), 64);
 	    dest += 64;
 	}
 	if (SCREENWIDTH&63)
 	{
-	    memcpy (dest, src+((y&63)<<6), SCREENWIDTH&63);
+	    DG_memcpy (dest, src+((y&63)<<6), SCREENWIDTH&63);
 	    dest += (SCREENWIDTH&63);
 	}
     }
