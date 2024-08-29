@@ -85,7 +85,8 @@ void V_CopyRect(int srcx, int srcy, byte *source,
 { 
     byte *src;
     byte *dest; 
- 
+
+
 #ifdef RANGECHECK 
     if (srcx < 0
      || srcx + width > SCREENWIDTH
@@ -103,14 +104,20 @@ void V_CopyRect(int srcx, int srcy, byte *source,
     V_MarkRect(destx, desty, width, height); 
  
     src = source + SCREENWIDTH * srcy + srcx; 
-    dest = dest_screen + SCREENWIDTH * desty + destx; 
 
-    for ( ; height>0 ; height--) 
-    { 
-        DG_memcpy(dest, src, width); 
-        src += SCREENWIDTH; 
-        dest += SCREENWIDTH; 
-    } 
+    if (dest_screen == I_VideoBuffer) {
+        DG_CopyRect(srcx, srcy, source, width, height, destx, desty);
+    } else {
+        src = source + SCREENWIDTH * srcy + srcx; 
+        dest = dest_screen + SCREENWIDTH * desty + destx; 
+        for ( ; height>0 ; height--) 
+        { 
+            
+            DG_memcpy(dest, src, width); 
+            src += SCREENWIDTH; 
+            dest += SCREENWIDTH; 
+        }
+    }
 } 
  
 //
@@ -167,7 +174,6 @@ void V_DrawPatch(int x, int y, patch_t *patch)
 
     col = 0;
     desttop = dest_screen + y * SCREENWIDTH + x;
-
     w = SHORT(patch->width);
 
     // for ( ; col<w ; x++, col++, desttop++)
@@ -191,7 +197,7 @@ void V_DrawPatch(int x, int y, patch_t *patch)
     // }
     byte* m_col = (byte *)column;
     byte* m_patch = (byte *)patch;
-    DG_DrawPatch(col, w, x, desttop, source, m_col, m_patch);
+    DG_DrawPatch(col, dest_screen == I_VideoBuffer, x, desttop, source, m_col, m_patch);
 }
 
 

@@ -13,7 +13,8 @@
 #define SYS_WOW_draw_column       105
 #define SYS_WOW_draw_span         106
 #define SYS_WOW_draw_patch        107
-#define SYS_WOW_DG_memcpy         108
+#define SYS_WOW_copy_rect         108
+#define SYS_WOW_DG_memcpy         109
 
 #define KEYQUEUE_SIZE 16
 
@@ -219,11 +220,12 @@ void DG_DrawColumn(uint8_t* dest, uint8_t* dc_colormap, uint8_t* dc_source, int 
         "mv a3, %3\n"  
         "mv a4, %4\n"  
         "mv a5, %5\n"  
-        "li a7, %6\n"  
+        "mv a6, %6\n"  
+        "li a7, %7\n"  
         "ecall\n"      
         : 
-        : "r" (dest), "r" (dc_colormap), "r" (dc_source), "r" (frac), "r" (frac_step), "r" (count), "i" (SYS_WOW_draw_column)  
-        : "a0", "a1", "a2", "a3", "a4", "a5", "a7"  
+        : "r" (dest), "r" (dc_colormap), "r" (dc_source), "r" (frac), "r" (frac_step), "r" (count), "r" (DG_ScreenBuffer), "i" (SYS_WOW_draw_column)  
+        : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"  
     );
 #else
     // Inner loop that does the actual texture mapping,
@@ -251,11 +253,12 @@ void DG_DrawSpan(uint8_t* dest, uint8_t* ds_colormap, uint8_t* ds_source, unsign
         "mv a3, %3\n"  
         "mv a4, %4\n"  
         "mv a5, %5\n"  
-        "li a7, %6\n"  
+        "mv a6, %6\n"  
+        "li a7, %7\n"  
         "ecall\n"      
         : 
-        : "r" (dest), "r" (ds_colormap), "r" (ds_source), "r" (position), "r" (step), "r" (count), "i" (SYS_WOW_draw_span)  
-        : "a0", "a1", "a2", "a3", "a4", "a5", "a7"  
+        : "r" (dest), "r" (ds_colormap), "r" (ds_source), "r" (position), "r" (step), "r" (count), "r" (DG_ScreenBuffer), "i" (SYS_WOW_draw_span)  
+        : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"  
     );
 #else
     int spot;
@@ -277,7 +280,7 @@ void DG_DrawSpan(uint8_t* dest, uint8_t* ds_colormap, uint8_t* ds_source, unsign
 #endif
 }
 
-void DG_DrawPatch(int col, int w, int x, uint8_t *desttop, uint8_t* source, uint8_t *m_col, uint8_t *m_patch) {
+void DG_DrawPatch(int col, int is_screen_buffer, int x, uint8_t *desttop, uint8_t* source, uint8_t *m_col, uint8_t *m_patch) {
 #ifdef ENABLE_WOW_API
     asm volatile (
         "mv a0, %0\n"  
@@ -287,10 +290,11 @@ void DG_DrawPatch(int col, int w, int x, uint8_t *desttop, uint8_t* source, uint
         "mv a4, %4\n"  
         "mv a5, %5\n"  
         "mv a6, %6\n"  
-        "li a7, %7\n"  
+        "mv t6, %7\n"  
+        "li a7, %8\n"  
         "ecall\n"      
         : 
-        : "r" (col), "r" (w), "r" (x), "r" (desttop), "r" (source), "r" (m_col), "r" (m_patch), "i" (SYS_WOW_draw_patch)  
+        : "r" (col), "r" (is_screen_buffer), "r" (x), "r" (desttop), "r" (source), "r" (m_col), "r" (m_patch), "r" (DG_ScreenBuffer), "i" (SYS_WOW_draw_patch)  
         : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"  
     );
 #else
@@ -319,6 +323,37 @@ void DG_DrawPatch(int col, int w, int x, uint8_t *desttop, uint8_t* source, uint
 #endif
 }
 
+void DG_CopyRect(int srcx, int srcy, uint8_t *source, int width, int height, int destx, int desty) {
+#ifdef ENABLE_WOW_API
+    asm volatile (
+        "mv a0, %0\n"  
+        "mv a1, %1\n"  
+        "mv a2, %2\n"  
+        "mv a3, %3\n"  
+        "mv a4, %4\n"  
+        "mv a5, %5\n"  
+        "mv a6, %6\n"  
+        "li a7, %7\n"  
+        "ecall\n"      
+        : 
+        : "r" (srcx), "r" (srcy), "r" (source), "r" (width), "r" (height), "r" (destx), "r" (desty), "i" (SYS_WOW_copy_rect)  
+        : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"  
+    );
+#else
+    src = source + SCREENWIDTH * srcy + srcx; 
+    dest = dest_screen + SCREENWIDTH * desty + destx; 
+    for ( ; height>0 ; height--) 
+    { 
+        
+        DG_memcpy(dest, src, width); 
+        src += SCREENWIDTH; 
+        dest += SCREENWIDTH; 
+    }
+#endif
+}
+
+
+
 void* DG_memcpy(uint8_t *dest, uint8_t* src, size_t len) {
 #ifdef ENABLE_WOW_API
     asm volatile (
@@ -336,6 +371,7 @@ void* DG_memcpy(uint8_t *dest, uint8_t* src, size_t len) {
     return memcpy(dest, src, len);
 #endif
 }
+
 
 
 int main(int argc, char **argv)

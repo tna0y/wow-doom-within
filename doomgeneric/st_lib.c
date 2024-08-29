@@ -33,7 +33,6 @@
 #include "st_lib.h"
 #include "r_local.h"
 
-
 // in AM_map.c
 extern boolean		automapactive; 
 

@@ -92,7 +92,8 @@ Below is the current syscall table. Note that it bears little resemblance to Lin
 | `SYS_WOW_draw_column`      | 105    | Optimization. Column draw loop implemented directly in Lua.                          |
 | `SYS_WOW_draw_span`        | 106    | Optimization. Span draw loop implemented directly in Lua.                            |
 | `SYS_WOW_draw_patch`       | 107    | Optimization. Patch draw loop implemented directly in Lua.                           |
-| `SYS_WOW_memcpy   `        | 108    | Optimization. memcpy implemented directly in Lua.                                    |
+| `SYS_WOW_copy_rect`        | 108    | Required to handle framebuffer in Lua.                                               |
+| `SYS_WOW_memcpy   `        | 109    | Optimization. memcpy implemented directly in Lua.                                    |
 | `exit`                     | 93     | Allows for proper termination.                                                       |
 | `write`                    | 64     | Useful for debugging, only `1` and `2` file descriptors are supported.               |
 | `newfstat`                 | 80     | No-op, called by `printf`.                                                           |
@@ -122,6 +123,8 @@ The following optimizations were implemented:
 - **Instruction chaining:** During decoding we build function chains up until the next branching instruction. Thus we do not return to main loop so much, provides less overhead.
 - **pc decoding-time evaluation:** PC for a given function is known during decoding allowing to perform all pc-related calculations during instruction decoding.
 - **DG_DrawPatch:** Patch drawing also moved to a syscall.
+- **Framebuffer moved to Lua:** All prevoiusly moved syscalls now draw in a table inside the emulator instead of "returning pixels" back to the game.
+
 ## Development
 
 Development is split into two repositories for convenience and licensing reasons:
@@ -144,6 +147,3 @@ Feel free to reach out via issues, Discord (tna0y), or Battle.net (tna0y#2138) i
 
 - [RISC-666](https://github.com/lcq2/risc-666) For providing a reference on instruction implementation.
 - [doomgeneric](https://github.com/ozkl/doomgeneric) Source port used as a base for this project.
-
-
-1.38 1.96 1.96
