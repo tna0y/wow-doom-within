@@ -44,6 +44,8 @@
 
 #include "am_map.h"
 
+#include "doomgeneric.h"
+
 
 // For use if I do walls with outsides/insides
 #define REDS		(256-5*16)
@@ -832,7 +834,8 @@ void AM_Ticker (void)
 //
 void AM_clearFB(int color)
 {
-    memset(fb, color, f_w*f_h);
+    // memset(fb, color, f_w*f_h);
+    DG_DrawRect(0, f_w, 0, f_h - 1, color);
 }
 
 
@@ -1006,7 +1009,7 @@ AM_drawFline
 	return;
     }
 
-#define PUTDOT(xx,yy,cc) fb[(yy)*f_w+(xx)]=(cc)
+#define PUTDOT(xx,yy,cc) DG_DrawPixel(xx, yy, cc)
 
     dx = fl->b.x - fl->a.x;
     ax = 2 * (dx<0 ? -dx : dx);
@@ -1330,8 +1333,8 @@ void AM_drawMarks(void)
 
 void AM_drawCrosshair(int color)
 {
-    fb[(f_w*(f_h+1))/2] = color; // single point for now
-
+    // fb[(f_w*(f_h+1))/2] = color; // single point for now
+    DG_DrawPixel(f_w/2, f_h/2, color);
 }
 
 void AM_Drawer (void)

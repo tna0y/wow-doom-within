@@ -14,7 +14,9 @@
 #define SYS_WOW_draw_span         106
 #define SYS_WOW_draw_patch        107
 #define SYS_WOW_copy_rect         108
-#define SYS_WOW_DG_memcpy         109
+#define SYS_WOW_draw_pixel        109
+#define SYS_WOW_draw_rect         110
+#define SYS_WOW_DG_memcpy         111
 
 #define KEYQUEUE_SIZE 16
 
@@ -22,7 +24,7 @@ static unsigned short s_KeyQueue[KEYQUEUE_SIZE];
 static unsigned int s_KeyQueueWriteIndex = 0;
 static unsigned int s_KeyQueueReadIndex = 0;
 
-#define RV32_KEYS_COUNT 18
+#define RV32_KEYS_COUNT 30
 
 #define RV32_KEY_W       0
 #define RV32_KEY_A       1
@@ -42,6 +44,19 @@ static unsigned int s_KeyQueueReadIndex = 0;
 #define RV32_KEY_RIGHT   15
 #define RV32_KEY_Y       16
 #define RV32_KEY_N       17
+#define RV32_KEY_COMMA   18
+#define RV32_KEY_PERIOD  19
+#define RV32_KEY_0       20
+#define RV32_KEY_1       21
+#define RV32_KEY_2       22
+#define RV32_KEY_3       23
+#define RV32_KEY_4       24
+#define RV32_KEY_5       25
+#define RV32_KEY_6       26
+#define RV32_KEY_7       27
+#define RV32_KEY_8       28
+#define RV32_KEY_9       29
+
 
 
 static unsigned char convertToDoomKey(unsigned char key)
@@ -84,6 +99,42 @@ static unsigned char convertToDoomKey(unsigned char key)
         break;
     case RV32_KEY_N:
         key = 'n';
+        break;
+    case RV32_KEY_COMMA:
+        key = ',';
+        break;
+    case RV32_KEY_PERIOD:
+        key = '.';
+        break;
+    case RV32_KEY_0:
+        key = '0';
+        break;
+    case RV32_KEY_1:
+        key = '1';
+        break;
+    case RV32_KEY_2:
+        key = '2';
+        break;
+    case RV32_KEY_3:
+        key = '3';
+        break;
+    case RV32_KEY_4:
+        key = '4';
+        break;
+    case RV32_KEY_5:
+        key = '5';
+        break;
+    case RV32_KEY_6:
+        key = '6';
+        break;
+    case RV32_KEY_7:
+        key = '7';
+        break;
+    case RV32_KEY_8:
+        key = '8';
+        break;
+    case RV32_KEY_9:
+        key = '9';
         break;
 	default:
 		key = tolower(key);
@@ -352,6 +403,37 @@ void DG_CopyRect(int srcx, int srcy, uint8_t *source, int width, int height, int
 #endif
 }
 
+void DG_DrawPixel(int x, int y, uint8_t color) {
+#ifdef ENABLE_WOW_API
+    asm volatile (
+        "mv a0, %0\n"  
+        "mv a1, %1\n"  
+        "mv a2, %2\n"  
+        "li a7, %3\n"  
+        "ecall\n"      
+        : 
+        : "r" (x), "r" (y), "r" (color), "i" (SYS_WOW_draw_pixel)  
+        : "a0", "a1", "a2", "a7"  
+    );
+#endif
+}
+
+void DG_DrawRect(int xmin, int xmax, int ymin, int ymax, uint8_t color) {
+#ifdef ENABLE_WOW_API
+    asm volatile (
+        "mv a0, %0\n"  
+        "mv a1, %1\n"  
+        "mv a2, %2\n"  
+        "mv a3, %3\n"  
+        "mv a4, %4\n"  
+        "li a7, %5\n"  
+        "ecall\n"      
+        : 
+        : "r" (xmin), "r" (xmax), "r" (ymin), "r" (ymax), "r" (color), "i" (SYS_WOW_draw_rect)  
+        : "a0", "a1", "a2", "a3", "a4", "a7"  
+    );
+#endif
+}
 
 
 void* DG_memcpy(uint8_t *dest, uint8_t* src, size_t len) {

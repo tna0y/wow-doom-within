@@ -39,5 +39,7 @@ void DG_DrawColumn(uint8_t* dest, uint8_t* dc_colormap, uint8_t* dc_source, int 
 void DG_DrawSpan(uint8_t* dest, uint8_t* ds_colormap, uint8_t* ds_source, unsigned int position, unsigned int step, int count);
 void DG_DrawPatch(int col, int is_screen_buffer, int x, uint8_t *desttop, uint8_t* source, uint8_t *m_col, uint8_t *m_patch);
 void DG_CopyRect(int srcx, int srcy, uint8_t *source, int width, int height, int destx, int desty);
+void DG_DrawPixel(int x, int y, uint8_t color);
+void DG_DrawRect(int xmin, int xmax, int ymin, int ymax, uint8_t color);
 void* DG_memcpy(uint8_t *dest, uint8_t* src, size_t len);
 #endif //DOOM_GENERIC
