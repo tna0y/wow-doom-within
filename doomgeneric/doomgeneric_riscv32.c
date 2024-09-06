@@ -22,7 +22,7 @@ static unsigned short s_KeyQueue[KEYQUEUE_SIZE];
 static unsigned int s_KeyQueueWriteIndex = 0;
 static unsigned int s_KeyQueueReadIndex = 0;
 
-#define RV32_KEYS_COUNT 18
+#define RV32_KEYS_COUNT 30
 
 #define RV32_KEY_W       0
 #define RV32_KEY_A       1
@@ -42,6 +42,19 @@ static unsigned int s_KeyQueueReadIndex = 0;
 #define RV32_KEY_RIGHT   15
 #define RV32_KEY_Y       16
 #define RV32_KEY_N       17
+#define RV32_KEY_COMMA   18
+#define RV32_KEY_PERIOD  19
+#define RV32_KEY_0       20
+#define RV32_KEY_1       21
+#define RV32_KEY_2       22
+#define RV32_KEY_3       23
+#define RV32_KEY_4       24
+#define RV32_KEY_5       25
+#define RV32_KEY_6       26
+#define RV32_KEY_7       27
+#define RV32_KEY_8       28
+#define RV32_KEY_9       29
+
 
 
 static unsigned char convertToDoomKey(unsigned char key)
@@ -84,6 +97,42 @@ static unsigned char convertToDoomKey(unsigned char key)
         break;
     case RV32_KEY_N:
         key = 'n';
+        break;
+    case RV32_KEY_COMMA:
+        key = ',';
+        break;
+    case RV32_KEY_PERIOD:
+        key = '.';
+        break;
+    case RV32_KEY_0:
+        key = '0';
+        break;
+    case RV32_KEY_1:
+        key = '1';
+        break;
+    case RV32_KEY_2:
+        key = '2';
+        break;
+    case RV32_KEY_3:
+        key = '3';
+        break;
+    case RV32_KEY_4:
+        key = '4';
+        break;
+    case RV32_KEY_5:
+        key = '5';
+        break;
+    case RV32_KEY_6:
+        key = '6';
+        break;
+    case RV32_KEY_7:
+        key = '7';
+        break;
+    case RV32_KEY_8:
+        key = '8';
+        break;
+    case RV32_KEY_9:
+        key = '9';
         break;
 	default:
 		key = tolower(key);
