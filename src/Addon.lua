@@ -1,10 +1,5 @@
 
--- params
-local ProfilingEnabled = false
-local ProfilingSamplingRate = 100 -- every N instructions
-
--- globals
-local game = nil
+-- globalslocal game = nil
 DW_IsRunning = false
 
 local frame = CreateFrame("Frame")
@@ -46,13 +41,32 @@ local function StopDoom()
     print("Doom stopped.")
 end
 
+local function SaveJITRecording()
+    if game ~= nil then
+        print("Number of JIT recoded jit instructions: " .. #game.cpu.jitRecording)
+        DoomWithinJITRecoding = game.cpu.jitRecording
+    end
+end
+
+local function SaveProfiling()
+    if game ~= nil then
+        print("Number of Profiled calls: " .. #game.cpu.profiling_log)
+        DoomWithinProfiling = game.cpu.profiling_log
+    end
+end
+
 local function AddonCommands(msg, editbox)
     local _, _, cmd, args = string.find(msg, "%s?(%w+)%s?(.*)")
     if cmd == "start" then
         StartDoom()
     elseif cmd == "stop" then
         StopDoom()
+    elseif cmd == "jit" then
+        SaveJITRecording()
+    elseif cmd == "profile" then
+        SaveProfiling()
     else
+        print("Unknown command: " .. cmd)
         print("Syntax: /doomwithin (start|stop)");
     end
 end

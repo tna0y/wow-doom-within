@@ -111,7 +111,7 @@ Doom runs live demos during the initial frames without any user input, so our be
 
 The following optimizations were implemented:
 
-- **Code cleanup:** Asserts and debug outputs were removed from performance-critical branches. This provided a major performance improvement.
+- **Code cleanup:** -- asserts and debug outputs were removed from performance-critical branches. This provided a major performance improvement.
 - **Instruction decoding caching:** We implemented a simple address-to-decoded-instruction-object table, as we do not support polymorphic binaries. This provided a major performance improvement.
 - **Sound-related code removal:** All sound-related code was removed from the game, resulting in a marginal binary size reduction.
 - **RANGECHECK undefined:** The `RANGECHECK` was undefined in the game source code, resulting in a marginal performance improvement.

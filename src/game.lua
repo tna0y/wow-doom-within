@@ -36,7 +36,8 @@ function _DW_Game()
         cpu = nil,
         frame = nil,
         is_running = false,
-        profiling_enabled = false,
+        profiling_enabled = true,
+        profiling_sampling_rate = 100,
         pressed_keys = {},
         sticky_keys = {},
         frame_start_time = 0,
@@ -107,9 +108,15 @@ function _DW_Game()
 
         RunNextFrame(function() 
             cpu:InitCPU(_DW_Init_doom, _DW_HandleEcall(self))
-
+            -- --iterate over the JIT recoding and set the addr_cache
+            -- print("Setting addr_cache")
+            -- for i, func in pairs(_DW_JITRecoding) do
+            --     cpu.addr_cache[i] = func(cpu)
+            --     print(i)
+            -- end
+            -- print("Done setting addr_cache")
             if self.profiling_enabled then
-                cpu:EnableProfiling(ProfilingSamplingRate)
+                cpu:EnableSequenceProfiling(self.profiling_sampling_rate)
             end
 
             self:loadChunkChain(1, text)

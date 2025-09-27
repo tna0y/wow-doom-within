@@ -40,6 +40,9 @@ addon: doomgeneric_lua
 	echo "## Title: $(ADDON_NAME)" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc	
 	echo "## Version: $(VERSION)" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
 	echo "## SavedVariables: DoomWithinProfiling" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
+	echo "## SavedVariablesPerCharacter: DoomWithinJITRecoding" >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
+
+
 	find $(ADDON_BUILD_DIR) -type f -name "*.lua" | xargs -I {} basename {} >> $(ADDON_BUILD_DIR)/$(ADDON_NAME).toc
 
 release: addon

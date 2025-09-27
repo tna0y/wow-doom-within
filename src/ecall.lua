@@ -18,7 +18,7 @@ function _DW_HandleEcall(game)
             elseif fd == 2 then -- stderr
                 print("\124cffff0000" .. s .. "\124r")
             else
-                --assert(false, "Unsupported fd")
+                print("Unsupported fd" .. tostring(fd))
             end
             CPU:StoreRegister(10, count)
             CPU.is_running = 0
@@ -333,7 +333,7 @@ function _DW_HandleEcall(game)
             CPU.memory:Write(4)(struct_addr, seconds)
             CPU.memory:Write(4)(struct_addr + 8, bit.band(nanoseconds, 0xffffffff))
         else
-            --assert(false, "syscall " .. tostring(syscall_num) .. " is not implemented")
+            ---- assert(false, "syscall " .. tostring(syscall_num) .. " is not implemented")
         end
     end
 end
