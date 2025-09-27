@@ -61,7 +61,7 @@ function _DW_HandleEcall(game)
             --do { ... } while (count--);
             for i=count,0,-1 do
             -- *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
-                local source_idx = bit.rshift(frac, 16) % 0x80
+                local source_idx = (math.floor(frac / 65536)) % 128
                 local colormap_idx =  read1(dc_source + source_idx)
                 local pixel_value = read1(dc_colormap + colormap_idx)
                 -- write1(dest, pixel_value)
@@ -84,9 +84,10 @@ function _DW_HandleEcall(game)
             local read1 = CPU.memory:Read(1)
             
             for i = 0, count do
-                local ytemp = bit.band(bit.rshift(position, 4), 0x0fc0)
-                local xtemp = bit.rshift(position, 26)
-                local spot = bit.bor(xtemp, ytemp)
+                local shifted = math.floor(position / 16)
+                local ytemp = (math.floor(shifted / 64) % 64) * 64 -- ((position>>4) & 0x0fc0)
+                local xtemp = math.floor(position / 67108864) % 64   -- (position>>26)
+                local spot = ytemp + xtemp -- bit ranges don't overlap; OR == +
 
                 local source_val = read1(ds_source + spot)
                 local val = read1(ds_colormap + source_val)
