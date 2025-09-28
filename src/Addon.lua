@@ -16,7 +16,7 @@ frame:SetScript("OnEvent", function(self, event, arg1)
         DoomWithinProfiling = {}
     elseif event == "PLAYER_LOGOUT" then
         if game ~= nil and ProfilingEnabled then
-            DoomWithinProfiling = game.CPU.profiling_log
+            DoomWithinProfiling = game.cpu.profiling_log
         end
     end
 end)
@@ -30,7 +30,10 @@ local function StartDoom()
         return
     end
     game = _DW_Game()
-    
+    if ProfilingEnabled then
+        game.profiling_enabled = true
+        game.profiling_sampling_rate = ProfilingSamplingRate
+    end
     game:Start()
     DW_IsRunning = true
 end
@@ -45,6 +48,7 @@ local function StopDoom()
     DW_IsRunning = false
     print("Doom stopped.")
 end
+
 
 local function AddonCommands(msg, editbox)
     local _, _, cmd, args = string.find(msg, "%s?(%w+)%s?(.*)")

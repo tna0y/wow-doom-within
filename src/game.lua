@@ -37,6 +37,7 @@ function _DW_Game()
         frame = nil,
         is_running = false,
         profiling_enabled = false,
+        profiling_sampling_rate = 100,
         pressed_keys = {},
         sticky_keys = {},
         frame_start_time = 0,
@@ -109,7 +110,7 @@ function _DW_Game()
             cpu:InitCPU(_DW_Init_doom, _DW_HandleEcall(self))
 
             if self.profiling_enabled then
-                cpu:EnableProfiling(ProfilingSamplingRate)
+                cpu:EnableProfiling(self.profiling_sampling_rate)
             end
 
             self:loadChunkChain(1, text)

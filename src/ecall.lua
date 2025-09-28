@@ -106,37 +106,54 @@ function _DW_HandleEcall(game)
             local m_patch = registers[16]
 
             local framebuffer_base = registers[31] -- t6
-
             local framebuffer = game.framebuffer
+
             local write1 = CPU.memory:Write(1)
             local read1 = CPU.memory:Read(1)
             local read2 = CPU.memory:Read(2)
             local read4 = CPU.memory:Read(4)
 
+            local SCREENWIDTH = 320
             local w = read2(m_patch)
+            local coloffs_base = m_patch + 8
+
             local count
             local dest
-            -- assert(w == read2(m_patch), "w is not equal to read2(m_patch)")
-            while col < w do
-                m_col = m_patch + read4(m_patch + 8 + col * 4)
-                while read1(m_col) ~= 0xff do
-                    source = m_col + 3
-                    dest = desttop + read1(m_col) * 320
-                    count = read1(m_col + 1)
-                    while count > 0 do
-                        -- cant use direct framebuffer access here
-                        -- because temporary framebuffer is sometimes as dest
-                        if is_screen_buffer == 1 then
-                            framebuffer[dest - framebuffer_base] = read1(source)
-                        else
-                            write1(dest, read1(source))
-                        end
 
-                        dest = dest + 320
-                        source = source + 1
-                        count = count - 1
+            while col < w do
+                m_col = m_patch + read4(coloffs_base + col * 4)
+                if is_screen_buffer == 1 then
+                    while read1(m_col) ~= 0xff do
+                        source = m_col + 3
+                        local topdelta = read1(m_col)
+                        dest = desttop + topdelta * SCREENWIDTH
+                        count = read1(m_col + 1)
+
+                        -- use framebuffer index and increment by SCREENWIDTH each step
+                        local idx = dest - framebuffer_base
+                        while count > 0 do
+                            framebuffer[idx] = read1(source)
+                            idx = idx + SCREENWIDTH
+                            source = source + 1
+                            count = count - 1
+                        end
+                        m_col = m_col + read1(m_col + 1) + 4
                     end
-                    m_col = m_col + read1(m_col + 1) + 4
+                else
+                    while read1(m_col) ~= 0xff do
+                        source = m_col + 3
+                        local topdelta = read1(m_col)
+                        dest = desttop + topdelta * SCREENWIDTH
+                        count = read1(m_col + 1)
+
+                        while count > 0 do
+                            write1(dest, read1(source))
+                            dest = dest + SCREENWIDTH
+                            source = source + 1
+                            count = count - 1
+                        end
+                        m_col = m_col + read1(m_col + 1) + 4
+                    end
                 end
                 col = col + 1
                 x = x + 1
@@ -306,7 +323,8 @@ function _DW_HandleEcall(game)
                     n = n - 1
                 end
             end
-
+        elseif syscall_num == 120 then -- flush_draw_commands
+            -- removed; batching reverted
         elseif syscall_num == 80 then -- newfstat
             -- local stat_addr = registers[10]
             -- CPU.memory:Write(stat_addr + 32, 512, 4) -- stat.st_blksize = 512
