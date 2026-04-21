@@ -67,6 +67,9 @@ function _DW_Game()
 
     function dw_game:loadChunkChain(cur_idx, text) 
         if cur_idx > #_DW_DoomLoadFuncs then
+            if _DW_DoomAOTChunk then
+                _DW_StartAOT(self.cpu, self)
+            end
             RunNextFrame(function()                
                 self.frame_start_time = GetTime()
                 self.cpu:Run()

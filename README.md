@@ -124,6 +124,7 @@ The following optimizations were implemented:
 - **pc decoding-time evaluation:** PC for a given function is known during decoding allowing to perform all pc-related calculations during instruction decoding.
 - **DG_DrawPatch:** Patch drawing also moved to a syscall.
 - **Framebuffer moved to Lua:** All prevoiusly moved syscalls now draw in a table inside the emulator instead of "returning pixels" back to the game.
+- **Build-time ahead-of-time Lua codegen:** `risc-v-wow-emu/tools/aot_compile.py` turns the compiled Doom ELF into a single Lua chunk (`doomgeneric_aot.lua`) with one closure per basic block and all 32 RV32 registers materialized as `local` variables of the outer chunk. Instruction dispatch becomes a single upvalue lookup per block instead of two function calls per instruction; immediates and shift amounts are folded at build time; x0 writes are elided. Covers 100.00% of reachable opcodes (117,760 / 117,760 on the current build). Runtime glue in `src/aot.lua` monkey-patches `cpu.Run` so the existing yield/resume syscall flow keeps working unchanged. See [`MEASURE.md`](MEASURE.md) for measurement protocol and [`risc-v-wow-emu/tools/aot_coverage.py`](risc-v-wow-emu/tools/aot_coverage.py) for opcode coverage analysis.
 
 ## Development
 
